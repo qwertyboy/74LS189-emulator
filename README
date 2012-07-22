@@ -1,0 +1,7 @@
+74LS189 SRAM Emulator
+
+Written for use on an ATmega328 using Arduino 0022, this is an emulator designed to replicate the functionality of the 74LS189 16x4 SRAM. It is NOT pin-compatible, and CANNOT directly replace existing chips. Eventually other functionality will be added, such as serial access, but don't depend on that becoming available for some time.
+
+I have not tested it yet, as I don't have access to my Arduino. It is also not finished. Porting the code to other devices should be relatively simple, and if you do, get in touch with me and I can add it here.
+
+One last thing, I am not sure if this will be fast enough for high-speed designs, so use it (when its done) at your own risk.
