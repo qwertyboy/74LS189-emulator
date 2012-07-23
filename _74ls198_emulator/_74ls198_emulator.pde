@@ -9,6 +9,7 @@ date.
 Data is stored in an array for ease of use.
 */
 
+//Main data array. We use boolean so we only have 1's and 0's
 boolean ram_data[16][4] = {
   {0,0,0,0},
   {0,0,0,0},
@@ -28,6 +29,7 @@ boolean ram_data[16][4] = {
   {0,0,0,0}
 };
 
+//Define some schtuff
 #define write_en 2
 #define chip_sel 3
 #define address 0
@@ -43,21 +45,24 @@ boolean data_vals[] = {0, 0, 0, 0};
 //Inverted data outputs are 12-15
 boolean notdata[] = {0, 0, 0, 0};
 
+//Write-enable and chip select values
 boolean write_en_state = 1;
 boolean chip_sel_state = 1;
 
 
 void setup(){
+  //Set up inputs
   pinMode(write_en, INPUT);
   pinMode(chip_sel, INPUT);
   
-  for(byte address_pin = 4; address_pin < 8; address_pin++){
-    pinMode(address_pin, INPUT);
+  //The rest is just a quick way to set up successive pins
+  for(byte input_pin = 4; input_pin < 12; input_pin++){
+    pinMode(input_pin, INPUT);
   }
   
-  for(byte data_in = 8; data_in < 12; data_in++){
-    pinMode(data_in, INPUT);
-  }
+  //for(byte data_in = 8; data_in < 12; data_in++){
+  //  pinMode(data_in, INPUT);
+  //}
   
   for(byte data_out = 12; data_out < 16; data_out++){
     pinMode(data_out, OUTPUT);
@@ -65,10 +70,12 @@ void setup(){
 }
 
 void loop(){
+  //Get status of pins
   chip_sel_state = digitalRead(chip_sel);
   write_en_state = digitalRead(write_en);
   
   if(chip_sel_state == 0){
+    //Read the address pins and convert them into a useable number
     readPins(address);
     
     for(byte index = 0; index < 4; index++){
@@ -76,14 +83,19 @@ void loop(){
     }
     
     if(write_en_state == 0){
+      //Read the data pins
       readPins(data);
       
+      //Use the address number that we figured out for the correct line
+      //in the memory array. Use a simple for loop to index the column.
+      //Also invert the data and store it in the output array.
       for(byte index = 0; index < 4; index++){
         ram_data[address_byte][index] = data_vals[index];
         notdata[index] = !ram_data[address_byte][index];
       }
     }
     
+    //Output the inverted data onto the correct pins.
     for(byte output_pin = 12; output_pin < 16; output_pin++){
       for(byte index = 0; index < 4; index++){
         digitalWrite(output_pin, notdata[index]);
